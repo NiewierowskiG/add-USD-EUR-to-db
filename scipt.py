@@ -30,7 +30,8 @@ if __name__ == "__main__":
             print(f"Błędny parametr {sys.argv[i]}")
             i += 1
     db = add_prices.AddPrices(host, login, password, database)
-    db.update()
     if excel:
         db.to_excel(excel_filename)
+    else:
+        db.update()
 
