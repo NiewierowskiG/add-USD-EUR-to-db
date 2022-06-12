@@ -75,3 +75,4 @@ class AddPrices():
             ' UnitPriceEuro, Ranking, ProductDesc, UnitsInStock, UnitsInOrder from Product', con=db)
 
         df.to_excel(filename + ".xlsx")
+        logging.info(f"Created Excel file named {filename + '.xlsx'}")
