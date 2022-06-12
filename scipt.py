@@ -6,6 +6,8 @@ if __name__ == "__main__":
     excel = False
     host = "localhost"
     login = "root"
+    password = "admin"
+    database = "mydb"
 
     while i < len(sys.argv):
         if sys.argv[i] == "--host":
