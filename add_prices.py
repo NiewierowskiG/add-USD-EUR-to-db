@@ -5,7 +5,8 @@ import logging
 import os
 
 current_filename = os.path.basename(__file__).rsplit('.', 1)[0]
-logging.basicConfig(filename=current_filename + '.log', level=logging.INFO, format='%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(filename=current_filename + '.log', level=logging.INFO,
+                    format='%(asctime)s:%(levelname)s:%(message)s')
 
 
 class AddPrices():
@@ -52,23 +53,25 @@ class AddPrices():
             logging.error(e.msg)
         for i in df.iterrows():
             update_rows.append((round(i[1]['UnitPrice'] / exchange_rates['EUR']),
-                               round(i[1]['UnitPrice'] / exchange_rates["USD"]),
-                               i[1]['ProductID']
-                               ))
+                                round(i[1]['UnitPrice'] / exchange_rates["USD"]),
+                                i[1]['ProductID']
+                                ))
         try:
-            cursor.executemany("Update Product Set UnitPriceEuro = %s, UnitPriceUSD = %s where ProductID = %s", update_rows)
+            cursor.executemany("Update Product Set UnitPriceEuro = %s, UnitPriceUSD = %s where ProductID = %s",
+                               update_rows)
             db.commit()
             for row in update_rows:
-                logging.info(f"Update Product Set UnitPriceEuro = {row[0]}, UnitPriceUSD = {row[1]} where ProductID = {row[2]}")
+                logging.info(
+                    f"Update Product Set UnitPriceEuro = {row[0]}, UnitPriceUSD = {row[1]} where ProductID = {row[2]}")
         except mysql.connector.errors.ProgrammingError as e:
             logging.error(e.msg)
         except mysql.connector.errors.DatabaseError as e:
             logging.error(e.msg)
 
-
-    def to_excel(self):
+    def to_excel(self, filename):
         db = self.connect()
-        df = pd.read_sql('select ProductID, DepartmentID, Category, IDSKU, ProductName, Quantity, UnitPrice, UnitPriceUSD,'
-                         ' UnitPriceEuro, Ranking, ProductDesc, UnitsInStock, UnitsInOrder from Product', con=db)
+        df = pd.read_sql(
+            'select ProductID, DepartmentID, Category, IDSKU, ProductName, Quantity, UnitPrice, UnitPriceUSD,'
+            ' UnitPriceEuro, Ranking, ProductDesc, UnitsInStock, UnitsInOrder from Product', con=db)
 
-        df.to_excel("output.xlsx")
+        df.to_excel(filename + ".xlsx")
